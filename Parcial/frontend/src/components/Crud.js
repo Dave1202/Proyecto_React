@@ -15,48 +15,61 @@ const Crud = () => {
   });
   const [editing, setEditing] = useState(null);
 
-  // Fetch estudiantes from API
-  useEffect(() => {
-    axios.get('/api/estudiantes')
-      .then(response => setEstudiantes(response.data))
-      .catch(error => console.error('Error fetching data:', error));
-  }, []);
+ // Fetch estudiantes from API
+useEffect(() => {
+  axios.get('/estudiantes')
+    .then(response => setEstudiantes(response.data))
+    .catch(error => console.error('Error fetching data:', error));
+}, []);
 
-  // Create new estudiante
-  const handleCreate = () => {
-    axios.post('api/estudiantes', newEstudiante)
-      .then(response => {
-        setEstudiantes([...estudiantes, response.data]);
-        setNewEstudiante({
-          numeroCarnet: '',
-          nombre: '',
-          apellido: '',
-          correo: '',
-          curso: '',
-          numeroDocIdentidad: ''
-        });
-      })
-      .catch(error => console.error('Error creating data:', error));
-  };
+// Create new estudiante
+const handleCreate = () => {
+  axios.post('/estudiantes', {
+    numeroCarnet: newEstudiante.numeroCarnet.toString(),
+    nombre: newEstudiante.nombre,
+    apellido: newEstudiante.apellido,
+    correo: newEstudiante.correo,
+    curso: newEstudiante.curso,
+    numeroDocIdentidad: newEstudiante.numeroDocIdentidad.toString(),
+  })
+    .then(response => {
+      setEstudiantes([...estudiantes, response.data]);
+      setNewEstudiante({
+        numeroCarnet: '',
+        nombre: '',
+        apellido: '',
+        correo: '',
+        curso: '',
+        numeroDocIdentidad: ''
+      });
+    })
+    .catch(error => console.error('Error creating data:', error));
+};
 
-  // Delete estudiante
-  const handleDelete = (numeroCarnet) => {
-    axios.delete(`/api/estudiantes/${numeroCarnet}`)
-      .then(() => setEstudiantes(estudiantes.filter(est => est.numeroCarnet !== numeroCarnet)))
-      .catch(error => console.error('Error deleting data:', error));
-  };
 
-  // Update estudiante
-  const handleUpdate = () => {
-    axios.put(`/api/estudiantes/${editing.numeroCarnet}`, editing)
-      .then(response => {
-        setEstudiantes(estudiantes.map(est =>
-          est.numeroCarnet === response.data.numeroCarnet ? response.data : est
-        ));
-        setEditing(null);
-      })
-      .catch(error => console.error('Error updating data:', error));
-  };
+// Delete estudiante
+const handleDelete = (numeroCarnet) => {
+  axios.delete(`/estudiantes/${numeroCarnet}`)
+    .then(() => {
+      // Actualiza el estado para eliminar el estudiante de la lista
+      setEstudiantes(estudiantes.filter(est => est.numeroCarnet !== numeroCarnet));
+    })
+    .catch(error => console.error('Error deleting student:', error));
+};
+
+
+// Update estudiante
+const handleUpdate = () => {
+  axios.put(`/estudiantes/${editing.numeroCarnet}`, editing)
+    .then(response => {
+      setEstudiantes(estudiantes.map(est =>
+        est.numeroCarnet === response.data.numeroCarnet ? response.data : est
+      ));
+      setEditing(null);
+    })
+    .catch(error => console.error('Error updating data:', error));
+};
+
 
   return (
     <div>

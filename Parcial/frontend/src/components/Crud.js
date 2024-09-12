@@ -24,7 +24,7 @@ const Crud = () => {
 
   // Create new estudiante
   const handleCreate = () => {
-    axios.post('/api/estudiantes', newEstudiante)
+    axios.post('api/estudiantes', newEstudiante)
       .then(response => {
         setEstudiantes([...estudiantes, response.data]);
         setNewEstudiante({

@@ -1,10 +1,10 @@
-// index.js
-
 const express = require('express');
+const cors = require('cors'); // Importa el paquete cors
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const app = express();
 
+app.use(cors()); // Usa el middleware cors
 app.use(express.json());
 
 // Obtener todos los estudiantes
